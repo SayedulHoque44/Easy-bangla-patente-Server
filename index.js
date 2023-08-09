@@ -26,6 +26,7 @@ async function run() {
      client.connect();
  
      const usersCollection = client.db('easyBanglaPatenteDb').collection('users')
+     const youtubeVideosCollection = client.db('easyBanglaPatenteDb').collection('youtubeVideo')
   
 
      //  Get All Users
@@ -87,10 +88,19 @@ async function run() {
         const result = await usersCollection.updateOne(query,updateDoc)
         res.send(result)
       })
-       //  Get Single User  
+       //  Get Single User  by id
      app.get('/users/:id',async(req,res)=>{
       const id = req.params.id
       const query = {_id:new ObjectId(id)}
+      // const query = {email:email}
+      const result = await usersCollection.findOne(query)
+      res.send(result)
+     })
+       //  Get Single User  by id
+     app.get('/useremail/:email',async(req,res)=>{
+      const email = req.params.email
+      // const query = {_id:new ObjectId(id)}
+      const query = {email:email}
       const result = await usersCollection.findOne(query)
       res.send(result)
      })
@@ -105,6 +115,27 @@ async function run() {
       const result = await usersCollection.updateOne(query,updateDoc)
       res.send(result)
      })
+    //  Get youtube videos 
+    app.get('/youtubeVideo',async(req,res)=>{
+
+      const result = await youtubeVideosCollection.find().toArray()
+      res.send(result)
+    })
+    //  Post youtube videos 
+    app.post('/youtubeVideo',async(req,res)=>{
+
+      const videoInfo = req.body
+      const result = await youtubeVideosCollection.insertOne(videoInfo)
+      res.send(result)
+    })
+    //  Delete youtube videos 
+    app.delete('/youtubeVideo/:id',async(req,res)=>{
+
+      const id = req.params.id
+      const query = {_id:new ObjectId(id)}
+      const result = await youtubeVideosCollection.deleteOne(query)
+      res.send(result)
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
