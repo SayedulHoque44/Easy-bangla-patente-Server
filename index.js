@@ -108,16 +108,15 @@ async function run() {
      app.patch('/paymentRecipt/:id',async(req,res)=>{
       const id = req.params.id
       const query = {_id:new ObjectId(id)}
-      const paymentRecipt = req.body
+      const ReciptAndNote = req.body
       const updateDoc = {
-        $set:paymentRecipt
+        $set:ReciptAndNote
       }
       const result = await usersCollection.updateOne(query,updateDoc)
       res.send(result)
      })
     //  Get youtube videos 
     app.get('/youtubeVideo',async(req,res)=>{
-
       const result = await youtubeVideosCollection.find().toArray()
       res.send(result)
     })
