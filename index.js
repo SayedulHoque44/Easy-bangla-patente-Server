@@ -27,6 +27,7 @@ async function run() {
  
      const usersCollection = client.db('easyBanglaPatenteDb').collection('users')
      const youtubeVideosCollection = client.db('easyBanglaPatenteDb').collection('youtubeVideo')
+     const BooksCollection = client.db('easyBanglaPatenteDb').collection('Books')
   
 
      //  Get All Users
@@ -135,6 +136,68 @@ async function run() {
       const result = await youtubeVideosCollection.deleteOne(query)
       res.send(result)
     })
+    // 
+    //  Get All Books 
+    app.get('/AllBooks',async(req,res)=>{
+      const result = await BooksCollection.find().toArray()
+      res.send(result)
+    })
+    //  Get single Books 
+    app.get('/singleBook/:id',async(req,res)=>{
+      const id = req.params.id
+      const query = {_id : new ObjectId(id)}
+      const result = await BooksCollection.findOne(query)
+      res.send(result)
+    })
+    //Add Book 
+     app.post('/addBook',async(req,res)=>{
+
+      const Book = req.body
+      Book.pages = [
+        {
+          pageImage:Book.coverImage,
+          index:0,
+        }
+      ]
+      const result = await BooksCollection.insertOne(Book)
+      res.send(result)
+    })
+//  patch page
+app.patch('/AddPage/:id',async(req,res)=>{
+
+  const id = req.params.id
+  const query= {_id:new ObjectId(id)}
+  const pageobj = req.body
+
+  // 
+  const book = await BooksCollection.findOne(query)
+  // 
+  const getLastIndex = (pages)=>{
+    // console.log(pages)
+    let index = 0
+
+    for(let i of pages){
+      if(i.index > index){
+        index = i.index
+      }
+    }
+
+    return parseInt(index)+1
+  }
+  const updateIndex = getLastIndex(book.pages)
+// 
+  const upBookWithPage ={
+    $set:{pages:[...book.pages,{
+      pageImage:pageobj.pageUrl ,
+      index:updateIndex
+    }]}
+  } 
+ 
+  const result = await BooksCollection.updateOne(query,upBookWithPage)
+  res.send(result)
+})
+// 
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
