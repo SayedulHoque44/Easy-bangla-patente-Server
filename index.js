@@ -28,6 +28,8 @@ async function run() {
      const usersCollection = client.db('easyBanglaPatenteDb').collection('users')
      const youtubeVideosCollection = client.db('easyBanglaPatenteDb').collection('youtubeVideo')
      const BooksCollection = client.db('easyBanglaPatenteDb').collection('Books')
+     const videoPartsCollection = client.db('easyBanglaPatenteDb').collection('VideoPart')
+     const CourseVideosCollection = client.db('easyBanglaPatenteDb').collection('CourseVideos')
   
 
      //  Get All Users
@@ -196,7 +198,25 @@ app.patch('/AddPage/:id',async(req,res)=>{
   const result = await BooksCollection.updateOne(query,upBookWithPage)
   res.send(result)
 })
-// 
+// Video Parts
+ //  Get video parts
+ app.get('/AllvideParts',async(req,res)=>{
+  const result = await videoPartsCollection.find().toArray()
+  res.send(result)
+})
+ //  Get videos by partId
+ app.get('/CourseVideos/:partId',async(req,res)=>{
+  const partId = req.params.partId
+  const result = await CourseVideosCollection.find({partId:partId}).toArray()
+  res.send(result)
+})
+ //  Get videos by partId
+ app.get('/CourseVideosSingle/:videoId',async(req,res)=>{
+  const videoId = req.params.videoId
+  const query = {_id:new ObjectId(videoId)}
+  const result = await CourseVideosCollection.findOne(query)
+  res.send(result)
+})
 
 
     // Send a ping to confirm a successful connection
