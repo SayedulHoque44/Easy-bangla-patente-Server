@@ -210,12 +210,24 @@ app.patch('/AddPage/:id',async(req,res)=>{
   const result = await CourseVideosCollection.find({partId:partId}).toArray()
   res.send(result)
 })
- //  Get videos by partId
+ //  Get single video by VideoId
  app.get('/CourseVideosSingle/:videoId',async(req,res)=>{
   const videoId = req.params.videoId
   const query = {_id:new ObjectId(videoId)}
   const result = await CourseVideosCollection.findOne(query)
   res.send(result)
+})
+// Post a VideoPart 
+app.post(`/addVideoPart`,async(req,res)=>{
+const VideoPart = req.body
+const result = await videoPartsCollection.insertOne(VideoPart)
+res.send(result)
+})
+// Post a Single video in part
+app.post(`/AddVideoInPart`,async(req,res)=>{
+const {title, videoLink, partId} = req.body
+const result = await CourseVideosCollection.insertOne({title,partId,videoLink:`https://d2na8awifhfga8.cloudfront.net/${videoLink}`})
+res.send(result)
 })
 
 
