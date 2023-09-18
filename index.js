@@ -99,12 +99,23 @@ async function run() {
       const result = await usersCollection.findOne(query)
       res.send(result)
      })
-       //  Get Single User  by id
+       //  Get Single User  by email
      app.get('/useremail/:email',async(req,res)=>{
       const email = req.params.email
       // const query = {_id:new ObjectId(id)}
       const query = {email:email}
       const result = await usersCollection.findOne(query)
+      res.send(result)
+     })
+       //  update verified user Single User  by email
+     app.put('/useremail/:email',async(req,res)=>{
+      const email = req.params.email
+      const {verified} = req.body
+      const query = {email:email}
+      const updateDoc = {
+        $set:{verified:verified}
+      }
+      const result = await usersCollection.updateOne(query,updateDoc)
       res.send(result)
      })
        // Patch payment receipt
