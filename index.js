@@ -119,7 +119,7 @@ async function run() {
       res.send(result)
      })
        // Patch payment receipt
-     app.patch('/paymentRecipt/:id',async(req,res)=>{
+     app.patch('/updateUser/:id',async(req,res)=>{
       const id = req.params.id
       const query = {_id:new ObjectId(id)}
       const ReciptAndNote = req.body
