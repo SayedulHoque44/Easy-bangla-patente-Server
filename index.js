@@ -30,6 +30,7 @@ async function run() {
      const BooksCollection = client.db('easyBanglaPatenteDb').collection('Books')
      const videoPartsCollection = client.db('easyBanglaPatenteDb').collection('VideoPart')
      const CourseVideosCollection = client.db('easyBanglaPatenteDb').collection('CourseVideos')
+     const usersDeviceCollection = client.db('easyBanglaPatenteDb').collection('UsersDevice')
   
 
      //  Get All Users
@@ -44,8 +45,32 @@ async function run() {
         const user = req.body
         const result = await usersCollection.insertOne(user)
         res.send(result)
+      })
+      //  Post A UserDevice 
+      app.post('/DeviceUsers',async(req,res)=>{
+        const device = req.body
+        const result = await usersDeviceCollection.insertOne(device)
+        res.send(result)
          
       })
+      //  Delete A UserDevice 
+      app.delete('/DeviceUsers/:id',async(req,res)=>{
+        const id = req.params.id
+        const query = {_id:new ObjectId(id)}
+        const result = await usersDeviceCollection.deleteOne(query)
+        res.send(result)
+      })
+      //  Delete All UserDevice 
+      app.delete('/DeviceUsers',async(req,res)=>{
+        const result = await usersDeviceCollection.deleteMany()
+        res.send(result)
+      })
+        //  Get All Devices  by userId
+     app.get('/DeviceUsers/:uId',async(req,res)=>{
+      const id = req.params.uId
+      const result = await usersDeviceCollection.find({userId:id}).toArray()
+      res.send(result)
+     })
       //  Delete A Single User
       app.delete('/users/:id',async(req,res)=>{
           
